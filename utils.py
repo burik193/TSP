@@ -56,7 +56,7 @@ def log(message, level='INFO'):
             logger.debug(message)
 
 
-def get_sum(G, l: list):
+def get_sum(G: nx.Graph, l: list):
     """
     Calculates the sum of edge weights in the graph G for the given path.
 
@@ -88,7 +88,7 @@ def no_duplicates(l: list):
     return len(l[:-1]) == len(set(l))
 
 
-def dist(p1, p2):
+def dist(p1: float, p2: float):
     """
     Calculates the Euclidean distance between two points.
 
