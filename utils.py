@@ -1,5 +1,6 @@
 import numpy as np
 import logging
+import networkx as nx
 
 
 def configure_logger(level='INFO', logfile=None):
