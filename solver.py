@@ -1,38 +1,33 @@
-import numpy as np
-# import bnb
+#!/usr/bin/env python
 import networkx as nx
 from utils import dist, get_sum, log
-import olegs_bnb as bnb
+from bnb import BnB
 import time
 
 
-def random_graph(N: int):
-    log(f"Generation random graph with {N} nodes...")
-    if N <= 0:
-        log("Graph should have more than 1 node!", 'ERROR')
-        raise Exception("Graph should have more than 1 node!")
-    G = nx.complete_graph(N)
-    pos = nx.spring_layout(G)
-    for i in range(N):
-        for j in range(N):
-            if i != j:
-                G.edges[i, j]['weight'] = dist(pos[i], pos[j])
-    log("Done.")
-    return G
+def solve(G: nx.Graph or str, method: str, save_graph=False):
+    """
+    Solves the TSP problem for the given graph using the specified method.
 
+    Args:
+        G (nx.Graph or str): Input graph or path to the graph file.
+        method (str): TSP solving method ('christofides', 'greedy', or 'bnb').
+        save_graph (bool): Flag indicating whether to save the graph to a file.
 
-def solve(G: nx.Graph or str, method: str, save=False):
+    Returns:
+        tuple: The best path found and its cost.
+    """
     start = time.time()
 
     if isinstance(G, str):
         G = nx.read_weighted_edgelist(G, nodetype=int)
-
     else:
-        if save:
+        if save_graph:
             nx.write_weighted_edgelist(G, 'graph.txt')
 
     log("\n\n=====================================================================")
     log(f"Solving graph using {method} algorithm...")
+
     if method == 'christofides':
         path = nx.approximation.christofides(G)
 
@@ -40,9 +35,9 @@ def solve(G: nx.Graph or str, method: str, save=False):
         path = nx.approximation.greedy_tsp(G)
 
     elif method == 'bnb':
-        # cost = get_sum(G, nx.approximation.christofides(G))
-        BNB = bnb.bnb(G)
+        BNB = BnB(G)
         path = BNB.TSP()
+
     else:
         return [], 0
 
